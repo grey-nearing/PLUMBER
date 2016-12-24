@@ -82,6 +82,12 @@ for s = 1:Nsites
    time = squeeze(ncread(fname,'time')); 
    Qe = squeeze(ncread(fname,'Qle'));  
    Qh = squeeze(ncread(fname,'Qh'));  
+   SM = squeeze(ncread(fname,'SoilMoist'));  
+
+size(SM)
+keyboard
+
+   SM1 = SM(:,1); SM2 = SM(:,2);
   catch
    fprintf('Failed !!!! \n')
    error('Did not work !!!')

@@ -1,0 +1,24 @@
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2015 The MathWorks, Inc.
+                   R2015b (8.6.0.267246) 64-bit (glnxa64)
+                              August 20, 2015
+
+ 
+For online documentation, see http://www.mathworks.com/support
+For product information, visit www.mathworks.com.
+ 
+Loading data at site Amplero from model CABLE.2.0 ... finished - # points = 70128 - time = 20.950096 
+Loading data at site Amplero from model CABLE_2.0_SLI.vxh599_r553 ... finished - # points = 70128 - time = 19.725097 
+Loading data at site Amplero from model CHTESSEL ... finished - # points = 69396 - time = 22.698113 
+Loading data at site Amplero from model COLASSiB.2.0 ... finished - # points = 70128 - time = 21.423820 
+Loading data at site Amplero from model ISBA_SURFEX_3l.SURFEX7.3 ... finished - # points = 70128 - time = 23.328401 
+Loading data at site Amplero from model ISBA_SURFEX_dif.SURFEX7.3 ... finished - # points = 70128 - time = 24.013609 
+Loading data at site Amplero from model JULES.3.1 ... finished - # points = 70127 - time = 21.300379 
+Loading data at site Amplero from model JULES3.1_altP ... finished - # points = 70127 - time = 21.499857 
+Loading data at site Amplero from model Mosaic.1 ... finished - # points = 70127 - time = 22.518135 
+Loading data at site Amplero from model NOAH.2.7.1 ... finished - # points = 70127 - time = 23.080492 
+Loading data at site Amplero from model Noah.3.2 ... finished - # points = 70127 - time = 22.527893 
+Loading data at site Amplero from model NOAH.3.3 ... finished - # points = 70127 - time = 22.485848 
+Loading data at site Amplero from model ORCHIDEE.trunk_r1401 ... Failed !!!! 
+>> 

@@ -1,0 +1,55 @@
++ ulimit -s unlimited
++ source /usr/share/modules/init/bash
+++ '[' 3.1.6 = '' ']'
+++ MODULE_VERSION_STACK=3.1.6
+++ export MODULE_VERSION_STACK
+++ MODULESHOME=/usr/share/modules
+++ export MODULESHOME
+++ '[' tool/matlab-R2015b = '' ']'
+++ '[' /usr/local/share/modules/modulefiles.slurm:/usr/local/share/modules/modulefiles.vis:/usr/local/other/modules/modulefiles = '' ']'
++ module purge
+++ /usr/bin/modulecmd bash purge
+ 
++ eval 'PATH='\''/usr/local/other/SLES11.1/jdk/jdk1.8.0_92/bin:/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/X11R6/bin:/usr/games:/opt/kde3/bin:/opt/ibutils/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin:/usr/slurm/bin'\'';export' 'PATH;unset' '_LMFILES_;unset' 'LOADEDMODULES;unset' 'MLM_LICENSE_FILE;'
+++ PATH=/usr/local/other/SLES11.1/jdk/jdk1.8.0_92/bin:/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/X11R6/bin:/usr/games:/opt/kde3/bin:/opt/ibutils/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin:/usr/slurm/bin
+++ export PATH
+++ unset _LMFILES_
+++ unset LOADEDMODULES
+++ unset MLM_LICENSE_FILE
++ module load tool/matlab-R2015b
+++ /usr/bin/modulecmd bash load tool/matlab-R2015b
+ 
++ eval 'PATH='\''/discover/vis/mathworks/matlab_r2015b/bin:/usr/local/other/SLES11.1/jdk/jdk1.8.0_92/bin:/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/X11R6/bin:/usr/games:/opt/kde3/bin:/opt/ibutils/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin:/usr/slurm/bin'\'';export' 'PATH;_LMFILES_='\''/usr/local/share/modules/modulefiles.vis/tool/matlab-R2015b'\'';export' '_LMFILES_;LOADEDMODULES='\''tool/matlab-R2015b'\'';export' 'LOADEDMODULES;MLM_LICENSE_FILE='\''28000@ls1,28000@ls2,28000@ls3:27000@ace64'\'';export' 'MLM_LICENSE_FILE;'
+++ PATH=/discover/vis/mathworks/matlab_r2015b/bin:/usr/local/other/SLES11.1/jdk/jdk1.8.0_92/bin:/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/X11R6/bin:/usr/games:/opt/kde3/bin:/opt/ibutils/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin:/usr/slurm/bin
+++ export PATH
+++ _LMFILES_=/usr/local/share/modules/modulefiles.vis/tool/matlab-R2015b
+++ export _LMFILES_
+++ LOADEDMODULES=tool/matlab-R2015b
+++ export LOADEDMODULES
+++ MLM_LICENSE_FILE=28000@ls1,28000@ls2,28000@ls3:27000@ace64
+++ export MLM_LICENSE_FILE
++ matlab -nodesktop -nodisplay -nosplash -nojvm -r 'benchmark_bootstrap(1,2,13,5)'
++ exit 0
+________________________________________________________________
+Job Resource Usage Summary for 11519952 
+Note: SLURM doesn't account for the exact same resource types as PBS.  
+      Also, you may see some values missing or zero, typically for 
+      very short jobs.  However, please do contact NCCS USG if you 
+      think the values below are in error.
+
+  CPU Time Used		: 09:52:40
+  Memory Used		: 1797576K
+  Virtual Memory Used	: 3256740K
+  Walltime Used		: 00:21:10
+
+  Memory Requested	: 0n (n=per node; c=per core)
+  CPUs Requested / Allocated : 1 / 28
+  Walltime Requested	: 12:00:00
+
+  Execution Queue	: compute
+  Head Node		: borgq194
+  Charged to		: s1688
+
+  Job Stopped		: Sun Oct 23 03:01:21 EDT 2016
+_____________________________________________________________________
+

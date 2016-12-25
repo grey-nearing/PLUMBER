@@ -77,11 +77,18 @@ for s = 1:20
     if x==y; continue; end;
     if ~isempty(find(data(:,y)<-9990,1,'first')); continue; end;
 
+    % timelag average
     Yw = window_average(data(:,y),lags(l));
     Xt = Xw(1:end-1,:); 
     Yt = Yw(1:end-1,:); 
     Ys = Yw(2:end,:); 
 
+    % remove grandmas
+    I = find(isnan(Xt)); Xt(I) = []; Yt(I) = []; Ys(I) = [];
+    I = find(isnan(Ys)); Xt(I) = []; Yt(I) = []; Ys(I) = [];
+    I = find(isnan(Yt)); Xt(I) = []; Yt(I) = []; Ys(I) = [];
+
+    % do the actaul calculations
     [Isxt,Isx,Ist,Ixt,Hs,Hx,Ht] = mutual_info_3(Ys,Xt,Yt,B(:,y),B(:,x),B(:,y));
     T(s,l,x,y) = Isx-Isxt;
     H(s,l,x,y) = Hs;

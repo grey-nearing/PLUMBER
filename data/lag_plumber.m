@@ -4,6 +4,8 @@ clc
 
 %% *** Dimensions ********************************************************
 
+error('Need to update the column variables here. We added soil moisture to the raw data files.');
+
 % model names
 modelNames = [ ...
               {'CABLE.2.0'}

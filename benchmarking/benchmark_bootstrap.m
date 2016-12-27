@@ -28,7 +28,7 @@ trnfctn = 'trainscg';
 %trnfctn = 'trainbr';
 
 % type names
-typeNames = [{'all'},{'dry'},{'wet'}];
+typeNames = [{'all'}];%,{'dry'},{'wet'}];
 
 % target names
 targNames = [{'Qe'},{'Qh'},{'NEE'}];
@@ -55,7 +55,7 @@ for s = 1:Nsites
  else Nuse = floor(Dmax/Nsites); end
 
  Idx{s} = randperm(Ndat,Nuse);
- 
+
  if (iSite > 1 && s == 1) || (iSite == 1 && s == 2)
   date = data.date(Idx{s},:);
   forc = data.forc(Idx{s},:,:);

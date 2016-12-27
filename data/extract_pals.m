@@ -153,8 +153,9 @@ for s = 1:Nsites
   forc(I,5) = PP;
  end
 
- % check file length
- assert(isempty(find(date(:,1)<0))); 
+% % check file length
+% assert(isempty(find(date(:,1)<0))); 
+% assert(isempty(find(isnan(date(dex,1))))); 
 
  % write total data file
  outdata = [date,forc,prog];

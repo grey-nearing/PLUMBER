@@ -23,7 +23,7 @@ siteNames = [{'Amplero'},{'Blodgett'},{'Bugac'   },{'ElSaler2'},{'ElSaler' },...
 Nsites = length(siteNames);
 
 % type names
-typeNames = [{'all'},{'dry'},{'wet'}];
+typeNames = [{'all'}];%,{'dry'},{'wet'}];
 
 % target names
 targNames = [{'Qe'},{'Qh'},{'NEE'}];

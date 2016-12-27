@@ -66,7 +66,7 @@ for s = 1:Nsites
  odates = odata(:,1:3);
 
  % init storage
- model = zeros(To,6,Nmodels)-9999;
+ model = zeros(To,8,Nmodels)-9999;
 
  % get model data
  for m = 1:Nmodels 
@@ -82,16 +82,18 @@ for s = 1:Nsites
    time = squeeze(ncread(fname,'time')); 
    Qe = squeeze(ncread(fname,'Qle'));  
    Qh = squeeze(ncread(fname,'Qh'));  
+  catch
+   error('Failed to find Qe and Qh variables !!!')
+  end
+
+  try
    SM = squeeze(ncread(fname,'SoilMoist'));  
-
-size(SM)
-keyboard
-
+   if(size(SM,2)>size(SM,1)); SM = SM'; end;
+   assert(size(SM,1)==length(Qe));
    SM1 = SM(:,1); SM2 = SM(:,2);
   catch
-   fprintf('Failed !!!! \n')
-   error('Did not work !!!')
-%   continue
+   SM1 = zeros(size(Qe))./0;
+   SM2 = zeros(size(Qe))./0;
   end
 
   try
@@ -116,7 +118,7 @@ keyboard
    Iy = find(yr(Id(Ih)) == odates(t,1));
    if ~isempty(Iy) 
     if length(Iy>1); Iy = Iy(1); end; % wtf, chtessl?
-    model(t,:,m) = [yr(Id(Ih(Iy))),dy(Id(Ih(Iy))),hr(Id(Ih(Iy))),Qe(Id(Ih(Iy))),Qh(Id(Ih(Iy))),NEE(Id(Ih(Iy)))]; 
+    model(t,:,m) = [yr(Id(Ih(Iy))),dy(Id(Ih(Iy))),hr(Id(Ih(Iy))),Qe(Id(Ih(Iy))),Qh(Id(Ih(Iy))),NEE(Id(Ih(Iy))),SM1(Id(Ih(Iy))),SM2(Id(Ih(Iy)))]; 
    end
   end
 

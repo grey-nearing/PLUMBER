@@ -8,7 +8,7 @@ assert(N > W*2);
 L = floor(N/W)-1;
 
 % init storage
-Xw = zeros(L,W)-9999;
+Xw = zeros(L,W)./0;
 
 % loop through dimensions of input data
 for w = 1:W
@@ -16,16 +16,18 @@ for w = 1:W
  for l = 1:L
   sdex = edex+1;
   edex = sdex+W-1;
-  Xw(l,w) = mean(X(sdex:edex));
+  if length(find(isnan(X(sdex:edex))))<0.1*W
+   Xw(l,w) = nanmean(X(sdex:edex));
+  end
  end
 end
 
 % make sure all data is filled
-try
- assert(isempty(find(Xw<-9990,1,'first')))
-catch
- keyboard
-end
+%try
+ assert(isempty(find(isnan(Xw),1,'first')))
+%catch
+% keyboard
+%end
 
 %% code below is for single chains.
 

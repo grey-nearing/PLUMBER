@@ -32,20 +32,15 @@ Ns = length(siteNames);
 % variable names
 varNames = [{'Ws'},{'Ta'},{'Rn'},{'Rh'},{'PP'},{'Qe'},{'Qh'},{'NEE'},{'SM1'},{'SM2'}];
 Du = 5; % number of forcing data
+D = 10;
 
 % number of histogram bins
 Nb = 50;
 
 % temporal lags
-lags = round(logspace(log10(1),log10(48*180),15));
-%lags = 48*[1/48,1/2,1,7,30,120];
+%lags = round(logspace(log10(1),log10(48*180),15));
+lags = [1,2,6,12,24,48,96,128,256];
 Nl = length(lags);
-
-% init storage
-D = 10;
-T = zeros(Ns,Nl,D,D)-0/0;
-H = zeros(Ns,Nl,D,D)-0/0;
-S = zeros(Ns,Nl,D,D)-0/0;
 
 % loop through sites
 for s = 1:Ns
@@ -54,8 +49,8 @@ for s = 1:Ns
  fprintf('Working on site %d of %d (%s) ...',s,Ns,siteNames{s}); tsite = tic;
 
  % load data
- fname = strcat('../data/pals_data/extracted/',siteNames(s),'.txt');
- data  = load(strcat(fname{1}));
+ fname = strcat('../data/pals_data/extracted/',siteNames{s},'.txt');
+ data = load(strcat(fname));
  dates = data(:,1:3);
  data(:,1:3) = [];  % remove dates
 
@@ -101,18 +96,70 @@ for s = 1:Ns
  % process networks at the different scales
  for l = 1:Nl
 
-  for x = 1:D
-%   if ~isempty(find(isnan(data(:,x)),1,'first')); continue; end;
-   XX = grandma_smoothing(data(:,x),lags(l));
-   if isempty(XX); continue; end;
-   Xw = window_average(XX,lags(l));
+  % init storage
+  T = zeros(Nl,D,D)./0;
+  H = zeros(Nl,D,D)./0;
+  S = zeros(Nl,D,D)./0;
 
+  % input data loop at site
+  for x = 1:D
+
+   % skip precip
+   if x == Du; continue; end;
+
+   % grab raw data
+   XXX = data(:,x); XXX(abs(XXX-9999)<1) = 0/0;
+
+   % find start and end dates of actual data
+   Ifx = find(~isnan(XXX),1,'first');
+   Ilx = find(~isnan(XXX),1,'last');
+   XXX = XXX(Ifx:Ilx,:); 
+
+   % deal with grandmas
+   try
+    XXX = grandma_smoothing(XXX,lags(l));
+   catch
+    continue
+   end
+
+   % if data is constant, skip
+   if isempty(XXX); continue; end;
+   if max(abs(diff(XXX)))==0; continue; end;
+
+   % target data loop at site
    for y = Du+1:D
+
+    % don't target self
     if x==y; continue; end;
-%    if ~isempty(find(isnan(data(:,y)),1,'first')); continue; end;
-    YY = grandma_smoothing(data(:,y),lags(l));
-    assert(length(XX) == length(YY));
+
+    % raw target data
+    YY = data(:,y); YY(abs(YY-9999)<1) = 0/0;
+    YY = YY(Ifx:Ilx,:);
+
+    % find start and end dates of actual data
+    Ify = find(~isnan(YY),1,'first');
+    Ily = find(~isnan(YY),1,'last');
+    XX = XXX(Ify:Ily,:); 
+    YY = YY(Ify:Ily,:); 
+
+    % deal with grandma
+    try
+     YY = grandma_smoothing(YY,lags(l));
+    catch
+     continue
+    end
+   
+    % if data is constant, skip
+    if isempty(XX); continue; end;
+    if max(abs(diff(XX)))==0; continue; end;
+    if isempty(YY); continue; end;
+    if max(abs(diff(YY)))==0; continue; end;
+
+    % deal with lags
+    Xw = window_average(XX,lags(l));
     Yw = window_average(YY,lags(l));
+    assert(numel(Xw)==numel(Yw));
+    if numel(Xw)<500; continue; end;
 
     % time shift
     Xt = Xw(1:end-1,:); 
@@ -125,34 +172,33 @@ for s = 1:Ns
     assert(isempty(find(isnan(Ys),1,'first')));
 
     % do the actaul calculations
-    [T(s,l,x,y),H(s,l,x,y),S(s,l,x,y)] = transfer_entropy_window_average(Ys,Xt,Yt,B(:,x),B(:,y));
+    [T(x,y),H(x,y),S(x,y)] = transfer_entropy_window_average(Ys,Xt,Yt,B(:,x),B(:,y));
 
     % screen report
-    fprintf('\n    Site: %s - Lag = %d - %s -> %s = %f - Ndata = %d',siteNames{s},lags(l),varNames{x},varNames{y},T(s,l,x,y)./H(s,l,x,y),length(YY));
+    fprintf('\n    Site: %s - Lag = %d - %s -> %s = %f - Ndata = %d',siteNames{s},lags(l),varNames{x},varNames{y},T(x,y)./H(x,y),numel(Yw));
 
-   end
-  end
+   end % x
+  end % y
+
+ % save in Circos format
+  fname = strcat('results/pals/PALS_',siteNames{s},'_',num2str(l),'.txt');
+  saveCircos(T,varNames,Du,D,fname);
 
   % save in Circos format
-  TT = squeeze(T(s,l,:,:)); 
-  fname = strcat('results/pals/PALS_',siteNames(s),'_',num2str(l),'.txt');
-  saveCircos(TT,varNames,Du,D,fname{1});
+  TT = T./H; 
+  fname = strcat('results/pals/PALS_Normalized_',siteNames{s},'_',num2str(l),'.txt');
+  saveCircos(TT,varNames,Du,D,fname);
 
-  % save in Circos format
-  TT = squeeze(T(s,l,:,:)./H(s,l,:,:)); 
-  fname = strcat('results/pals/PALS_Normalized_',siteNames(s),'_',num2str(l),'.txt');
-  saveCircos(TT,varNames,Du,D,fname{1});
-
- end
+ end % lags
 
  % save progress
- save('results/pals/savePALSprogress.mat');
+ save('results/pals/saveProgress.mat');
 
  % screen report
- t = toc; fprintf('\n');
+ t = toc(tsite); fprintf('\n');
  fprintf('Finished Site %s - time = %f\n',siteNames{s},t);
 
-end
+end % site
 
 
 

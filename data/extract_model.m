@@ -54,25 +54,28 @@ siteNames =  [{'Amplero'}
 Nsites = length(siteNames);
 Nmodels = length(modelNames);
 
+% fixed dimensions
+Dd = 3;
+Du = 5;
+Dz = 5;
+D = Dd+Du+Dz;
+
 % loop through sites
 for s = 1:Nsites   
 
  % get FluxNet data
  fname = strcat('pals_data/extracted/',siteNames{s},'.txt'); 
- odata = load(fname);
- To = size(odata,1);
-
- % extract dates
- odates = odata(:,1:3);
+ pals = load(fname);
+ Npals = size(pals,1);
 
  % init storage
- model = zeros(To,8,Nmodels)-9999;
+ model = zeros([size(pals),Nmodels])./0;
 
  % get model data
  for m = 1:Nmodels 
 
   % screen report
-  fprintf('Loading data at site %s from model %s ... ',siteNames{s},modelNames{m}); tic;
+  fprintf('%s - %s ... ',siteNames{s},modelNames{m}); tic;
 
   % get model data
   fname = strcat('model_data/',modelNames{m},'/',modelNames{m},'_',siteNames{s},'Fluxnet.1.4.nc');
@@ -112,26 +115,36 @@ for s = 1:Nsites
   yr = yr'; dy = dy'; hr = hr';
 
   % find matching dates in observation files
-  for t = 1:To
-   Id = find(dy         == odates(t,2));
-   Ih = find(hr(Id)     == odates(t,3));
-   Iy = find(yr(Id(Ih)) == odates(t,1));
+  Npts = 0;
+  for t = 1:size(pals,1)
+   Id = find(dy         == pals(t,2));
+   Ih = find(hr(Id)     == pals(t,3));
+   Iy = find(yr(Id(Ih)) == pals(t,1));
    if ~isempty(Iy) 
-    if length(Iy>1); Iy = Iy(1); end; % wtf, chtessl?
-    model(t,:,m) = [yr(Id(Ih(Iy))),dy(Id(Ih(Iy))),hr(Id(Ih(Iy))),Qe(Id(Ih(Iy))),Qh(Id(Ih(Iy))),NEE(Id(Ih(Iy))),SM1(Id(Ih(Iy))),SM2(Id(Ih(Iy)))]; 
+    if length(Iy>1); Iy = Iy(1); end; % wtf, chtessel?
+    pals(t,Dd+Du+1) = Qe(Id(Ih(Iy)));
+    pals(t,Dd+Du+2) = Qh(Id(Ih(Iy)));
+    pals(t,Dd+Du+3) = NEE(Id(Ih(Iy)));
+    pals(t,Dd+Du+4) = SM1(Id(Ih(Iy)));
+    pals(t,Dd+Du+5) = SM2(Id(Ih(Iy)));
+    Npts = Npts + 1;
+   else
+    pals(t,Dd+Du+1) = 0/0;
+    pals(t,Dd+Du+2) = 0/0;
+    pals(t,Dd+Du+3) = 0/0;
+    pals(t,Dd+Du+4) = 0/0;
+    pals(t,Dd+Du+5) = 0/0;
    end
+   model(t,:,m) = pals(t,:);
   end
-
-  % number of points found
-  Npts = length(find(model(:,1,m)>0));
 
   % fix CHTESSEL
   if strcmpi(modelNames{m},'CHTESSEL')
-   model(:,4:5,m) = -model(:,4:5,m);
+   model(:,Dd+Du+(1:2),m) = -model(:,Dd+Du+(1:2),m);
   end
 
   % screen report
-  t = toc; fprintf('finished - # points = %d - time = %f \n',Npts,t);
+  t = toc; fprintf('Npoints = %d - time = %f \n',Npts,t);
 
  end % models
 

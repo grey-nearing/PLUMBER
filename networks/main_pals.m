@@ -97,9 +97,9 @@ for s = 1:Ns
  for l = 1:Nl
 
   % init storage
-  T = zeros(Nl,D,D)./0;
-  H = zeros(Nl,D,D)./0;
-  S = zeros(Nl,D,D)./0;
+  T = zeros(D)./0;
+  H = zeros(D)./0;
+  S = zeros(D)./0;
 
   % input data loop at site
   for x = 1:D
